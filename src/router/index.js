@@ -1,23 +1,46 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '../views/Homepage.vue'
+import store from "../store";
 
 Vue.use(VueRouter)
 
+// const ifNotAuthenticated = (to, from, next) => {
+//   console.log("from", from, store.getters.isAuthenticated)
+//   if (!store.getters.isAuthenticated) {
+//     next();
+//     return;
+//   }
+//   next(from);
+// };
+// const ifAuthenticated = (to, from, next) => {
+//   if (store.getters.isAuthenticated) {
+//     next();
+//     return;
+//   }
+//   next();
+// };
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+
+  },
+
+  {
+    path: "/confirm",
+    name: "confirm",
+    component: () =>
+      import("../components/confirmation.vue"),
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    path: "/user",
+    name: "user",
+    component: () =>
+      import("../components/downloadUser.vue"),
+
+  },
 ]
 
 const router = new VueRouter({

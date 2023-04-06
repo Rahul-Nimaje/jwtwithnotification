@@ -31,10 +31,10 @@ export default {
     // this.params = this.$route.query.email;
   },
   beforeMount() {
-    console.log("enter - in ap", this.$route.query);
+    console.log("enter - in ap", this.$route);
     this.params = this.$route.query.email;
     user
-      .get("/api/auth/confirm?email" + "=" + this.$route.query.email)
+      .post("admin/confirm",{email:this.$route.query.email})
       .then((response) => {
         console.log("respnse", response);
         if (response.data && response.data.isVerified == true) {

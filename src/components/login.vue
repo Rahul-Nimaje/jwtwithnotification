@@ -67,11 +67,18 @@
                       <v-text-field
                         v-model="firstname"
                         :rules="[rules.required]"
-                        label="user name*"
+                        label="First Name*"
                         required
                       ></v-text-field>
                     </v-col>
-
+                     <v-col cols="12" sm="12" md="12">
+                      <v-text-field
+                        v-model="lastName"
+                        :rules="[rules.required]"
+                        label="last Name*"
+                        required
+                      ></v-text-field>
+                    </v-col>
                     <v-col cols="12">
                       <v-text-field
                         v-model="registeremail"
@@ -90,6 +97,7 @@
                         label="Password"
                         hint="At least 8 characters"
                         counter
+                        required
                         @click:append="show1 = !show1"
                       ></v-text-field>
                     </v-col>
@@ -103,8 +111,51 @@
                         name="input-10-1"
                         label="Confirm Password"
                         counter
+                        required
                         @click:append="show1 = !show1"
                       ></v-text-field>
+                    </v-col>
+                      <v-col cols="12">
+                      <v-text-field
+                        block
+                        v-model="mobileNumber"
+                        type="number"
+                        min-length="10"
+                        :rules="mobileRules"
+                        max-length="10"
+                        name="input-10"
+                        label="Mobile Number"
+                        counter
+                        required
+                      ></v-text-field>
+                    </v-col>
+                     <v-col cols="12">
+                      <v-combobox
+                        block
+                        v-model="department"
+                        :items="Departments"
+                         item-text="departmentname"
+                        label="Departments"
+                        required
+                      ></v-combobox>
+                    </v-col>
+                     <v-col cols="12">
+                      <v-combobox
+                        block
+                        v-model="usertype"
+                        :items="userType"
+                        label="Departments"
+                        required
+                      ></v-combobox>
+                    </v-col>
+                     <v-col cols="12">
+                      <v-combobox
+                        block
+                        v-model="uerStatus"
+                        :items="status"                        
+                        label="Departments"
+                        required
+                      ></v-combobox>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -136,14 +187,26 @@ export default {
       invalidemail: null,
       password: null,
       firstname: null,
+      lastName:null,
       registeremail: null,
       registerpassword: null,
+      mobileNumber: null,
+      Departments: [],
+      userType: ['user', 'admin', 'manager'],
+      status:['Active','Deactive'],
+      department: null,
+      uerStatus: 'Active',
+      usertype:'admin',
       verify: null,
       valid: null,
       loginEmailRules: [
         (v) => !!v || "Required",
         (v) =>
           /.+@.+\..+/.test(v) || "E-mail must be valid" || this.invalidemail,
+      ],
+      mobileRules: [
+        (v) => !!v || "Required",
+        (v)=>v.length==10||"Mobile must be at least 10"
       ],
       rules: {
         required: (value) => !!value || "Required.",
@@ -157,11 +220,26 @@ export default {
         this.registerpassword === this.verify || "Password must match";
     },
   },
+  mounted() {
+    this.getDepartment();
+  },
   methods: {
+    async getDepartment() {
+      let postoption = {
+      status:"Active"
+    }
+      await user.post("/admin/getdepartment",postoption).then((response) => {
+        console.log("getDepartment", response)
+        if (response.data.length > 0) {
+          this.Departments = response.data
+          console.log("Departments",this.Departments)
+        }
+      })
+    },
     async login() {
       if (this.$refs.loginForm.validate()) {
         await user
-          .post("/api/auth/signin", {
+          .post("/login/signin", {
             username: this.firstname,
             email: this.email,
             password: this.password,
@@ -179,11 +257,17 @@ export default {
 
     async submit() {
       if (this.$refs.valid.validate()) {
+        console.log("Submit",this.department)
         await user
-          .post("/api/auth/signup", {
+          .post("/admin/signup", {
             email: this.registeremail,
-            username: this.firstname,
+            firstName: this.firstname,
+            lastName:this.lastName,
             password: this.registerpassword,
+            status: "Active",
+            department: this.department._id,
+            mobileNumber:this.mobileNumber
+            
           })
           .then((Response) => {
             console.log(Response.data);

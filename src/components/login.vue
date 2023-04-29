@@ -1,19 +1,20 @@
-<template>
-  <v-row justify="center" align="center">
-    <v-col cols="14" xs="14" md="4">
-      <v-container class="pa-2">
-        <v-card class="elevation-6">
-          <v-toolbar dark color="primary">
-            <v-toolbar-title class="font-weight-bold">Login</v-toolbar-title>
-          </v-toolbar>
-
+<template >
+      <v-sheet class="hero">
+        <!-- <v-row no-gutters 
+      justify="center" class="mt-15">
+          <v-col cols="12" sm="6" xs="6" md="6"> -->
+        <div style="margin-left:10%; margin-right:10%; margin-top:10%">
+        <v-card class="elevation-6"  style="border:1px solid white">     
+            <v-row no-gutters justify="center">
+            <h1 class="font-weight-bold">Login</h1>
+            </v-row>
           <v-card-text>
             <p>{{ text }}</p>
           </v-card-text>
 
           <v-form ref="loginForm" v-model="valid" lazy-validation>
             <v-text-field
-              class="pa-1"
+              class="pa-1 ma-2"
               outlined
               name="login"
               label="Email"
@@ -24,7 +25,7 @@
 
             <v-text-field
               outlined
-              class="pa-1"
+              class="pa-1 ma-2"
               v-model="password"
               :rules="[rules.required, rules.min]"
               name="password"
@@ -35,7 +36,7 @@
 
           <v-card-actions class="pa-2">
             <v-spacer></v-spacer>
-            <v-btn block :disabled="!valid" @click="login" color="primary"
+            <v-btn block :disabled="!valid" @click="login" class="glow-on-hover white--text" color="green darken-2"
               >Login</v-btn
             >
           </v-card-actions>
@@ -46,8 +47,8 @@
         <v-dialog v-model="dialog" persistent max-width="600px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              class="mt-5 ml-10"
-              color="primary"
+              class="glow-on-hover mt-5 ml-10"
+             color="green darken-2"
               dark
               v-bind="attrs"
               v-on="on"
@@ -163,17 +164,19 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="dialog = false">
+                <v-btn color="green darken-2" text @click="dialog = false">
                   Close
                 </v-btn>
-                <v-btn color="blue darken-1" text @click="submit"> Save </v-btn>
+                <v-btn color="green darken-2" text @click="submit"> Save </v-btn>
               </v-card-actions>
             </v-card>
           </v-form>
         </v-dialog>
-      </v-container>
-    </v-col>
-  </v-row>
+        </div>
+        <!-- </v-col>
+        </v-row> -->
+      </v-sheet>
+  
 </template>
 <script>
 import user from "../services/userservice";
@@ -284,3 +287,82 @@ export default {
   },
 };
 </script>
+<style scoped>
+html,
+.hero {
+  background: url('../assets/background.jpg');
+  background-size: cover;
+  height: 100vh;
+}
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+
+.glow-on-hover {
+    width: 220px;
+    height: 50px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #3bb719;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+}
+
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+.glow-on-hover:active {
+    color: #237025
+}
+
+.glow-on-hover:active:after {
+    background: transparent;
+}
+
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+</style>
